@@ -1,45 +1,170 @@
-h(17, 2).
-h(1, 2).
-o(19, 5).
+h(16, 18).
+h(14, 8).
+h(14, 9).
+h(14, 10).
+h(14, 11).
+h(14, 12).
+h(14, 13).
+h(14, 14).
+h(14, 15).
+h(13, 8).
+h(13, 13).
+h(13, 14).
+h(13, 15).
+h(12, 15).
+h(12, 16).
+h(11, 15).
+h(11, 16).
+h(11, 17).
+h(10, 14).
+h(10, 16).
+h(10, 17).
+h(9, 5).
+h(9, 9).
+%% h(9, 11).
+h(9, 15).
+h(9, 17).
+h(8, 14).
+h(8, 15).
+h(8, 16).
+h(8, 17).
+h(7, 14).
+h(7, 15).
+h(7, 16).
+h(7, 17).
+h(6, 15).
+h(6, 17).
+h(6, 18).
+h(5, 16).
+h(5, 17).
+h(3, 9).
+h(1, 13).
+h(0, 13).
+o(19, 7).
+o(18, 3).
 o(18, 4).
+o(18, 10).
+o(18, 12).
+o(18, 14).
+o(18, 17).
+o(17, 1).
+o(17, 2).
 o(17, 3).
+o(17, 5).
+o(17, 8).
+o(17, 13).
+o(17, 15).
+o(16, 0).
+o(16, 1).
+o(16, 2).
 o(16, 4).
 o(16, 5).
-o(16, 6).
-o(15, 1).
-o(15, 2).
-o(15, 6).
-o(14, 0).
-o(14, 2).
-o(14, 6).
+o(16, 10).
+o(16, 12).
+o(16, 15).
+o(16, 17).
+o(15, 8).
+o(15, 14).
+o(14, 1).
+o(14, 3).
+o(14, 5).
+o(14, 7).
+o(14, 18).
+o(13, 1).
 o(13, 2).
-o(13, 4).
-o(13, 5).
 o(13, 6).
-o(12, 2).
-o(12, 4).
-o(11, 0).
-o(11, 1).
-o(11, 2).
-o(11, 4).
+o(13, 9).
+o(13, 10).
+o(13, 11).
+o(13, 12).
+o(13, 16).
+o(13, 17).
+o(12, 1).
+o(12, 5).
+o(12, 8).
+o(12, 13).
+o(12, 14).
+o(12, 17).
+o(11, 7).
+o(11, 11).
+o(11, 14).
+o(11, 18).
+o(10, 2).
 o(10, 4).
-o(9, 1).
-o(9, 2).
+o(10, 7).
+o(10, 10).
+o(10, 12).
+o(10, 15).
 o(9, 3).
-o(9, 4).
-o(8, 1).
+o(9, 7).
+o(9, 14).
+o(9, 16).
+o(9, 18).
+o(8, 6).
+o(8, 8).
+o(8, 13).
+o(8, 18).
+o(8, 19).
 o(7, 1).
-o(6, 1).
-o(5, 1).
+o(7, 2).
+o(7, 4).
+o(7, 9).
+o(7, 10).
+o(7, 12).
+o(7, 13).
+o(6, 0).
+o(6, 3).
+o(6, 5).
+o(6, 7).
+o(6, 10).
+o(6, 12).
+o(6, 14).
+o(6, 16).
+o(5, 2).
+o(5, 6).
+o(5, 8).
+o(5, 10).
+o(5, 15).
 o(4, 1).
-o(3, 1).
-o(2, 1).
-o(2, 2).
-o(1, 3).
+o(4, 3).
+o(4, 10).
+o(4, 12).
+o(4, 13).
+o(4, 15).
+o(4, 18).
+o(3, 7).
+o(3, 10).
+o(3, 12).
+o(3, 13).
+o(3, 17).
+o(2, 0).
+o(2, 3).
+o(2, 5).
+o(2, 8).
+o(2, 10).
+o(2, 13).
+o(2, 16).
+o(1, 4).
+o(1, 7).
+o(1, 11).
+o(1, 15).
+o(1, 18).
+o(1, 19).
 o(0, 1).
-o(0, 2).
-t(18, 1).
+o(0, 3).
+o(0, 7).
+o(0, 10).
+o(0, 12).
+t(10, 11).
 dynamic(max/1).
+direction(0, 1).
+direction(0, -1).
+direction(1, 0).
+direction(1, 1).
+direction(1, -1).
+direction(-1, 0).
+direction(-1, 1).
+direction(-1, -1).
 
 x_in_bound(X) :-
 	X < 20,
@@ -95,9 +220,37 @@ in_list(L, X, Y) :-
 		L1 == [X, Y]
 	).
 
+pass(X, Y, X1, Y1, Visited) :-
+	direction(Xd, Yd),
+	pass_(X, Y, X1, Y1, Visited, Xd, Yd).
+
+pass_(X, Y, X1, Y1, Visited, Xd, Yd) :-
+	X1 is X + Xd,
+	Y1 is Y + Yd,
+	h(X1, Y1),
+	\+ in_list(Visited, X1, Y1).
+
+pass_(X, Y, X1, Y1, Visited, Xd, Yd) :-
+	Xt is X + Xd,
+	Yt is Y + Yd,
+	\+ o(Xt, Yt),
+	in_bound(Xt, Yt),
+	pass_(Xt, Yt, X1, Y1, Visited, Xd, Yd).
+
 move(X, Y, Visited, Path) :-
 	t(X,Y) -> Path = [[X, Y]],!;(
 		get_neighbour(X, Y, X1, Y1, Visited),
+		V1 = [[X, Y]|Visited],
+		length(V1, N1),
+		max(N),
+		N1 < N,
+		move(X1, Y1, V1, P1),
+		Path = [[X, Y]|P1]
+	).
+
+move(X, Y, Visited, Path) :-
+	t(X,Y) -> Path = [[X, Y]],!;(
+		pass(X, Y, X1, Y1, Visited),
 		V1 = [[X, Y]|Visited],
 		length(V1, N1),
 		max(N),
@@ -141,11 +294,34 @@ print_row(X, Y, Path) :-
 	(\+ x_in_bound(X), write('\n'));
 	(x_in_bound(X), print_dot(X, Y, Path), write(' '), X1 is X+1, print_row(X1, Y, Path)).
 
+print_ux_indecies(X) :-
+	x_in_bound(X),
+	T is X//10,
+	(X < 10 -> write(' '); write(T)),
+	write(' '),
+	X1 is X + 1,
+	print_ux_indecies(X1).
+
+print_bx_indecies(X) :-
+	x_in_bound(X),
+	T is X mod 10,
+	write(T),
+	write(' '),
+	X1 is X + 1,
+	print_bx_indecies(X1).
+
 print_map_(Y, Path) :-
 	y_in_bound(Y),
+	write(Y),
+	write('  '),
+	(Y < 10 -> write(' '); true),
 	print_row(0, Y, Path),
 	Y1 is Y - 1,
 	print_map_(Y1, Path).
 
 print_map(Path) :-
-	print_map_(19, Path).
+	print_map_(19, Path);
+	write('y/x '),
+	print_ux_indecies(0);
+	write('\n    '),
+	print_bx_indecies(0).
