@@ -244,7 +244,6 @@ rm(Path) :-
 random_start_(Path, N, Len) :-
 	N > 0,
 	N1 is N - 1,
-	format('Current attempt: ~d ~n', [N]),
 	(rm(P) -> (
 			length(P, PLen),
 			(PLen < Len -> 
@@ -328,7 +327,7 @@ greedy_move_(States, State) :-
 	(State = NextCoord; greedy_move_(FilteredStates, State)).
 
 greedy_start(Path) :-
-	greedy_move(0, 0, [], Path).
+	greedy_move(0, 0, [], Path).a
 
 pass(X, Y, X1, Y1, Visited) :-
 	direction(Xd, Yd),
