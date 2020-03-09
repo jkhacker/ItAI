@@ -327,7 +327,7 @@ greedy_move_(States, State) :-
 	(State = NextCoord; greedy_move_(FilteredStates, State)).
 
 greedy_start(Path) :-
-	greedy_move(0, 0, [], Path).a
+	greedy_move(0, 0, [], Path).
 
 pass(X, Y, X1, Y1, Visited) :-
 	direction(Xd, Yd),
