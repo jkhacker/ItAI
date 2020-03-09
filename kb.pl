@@ -95,19 +95,19 @@ get_neighbour(X, Y, X1, Y1, Visited) :-
 	neighbour(X, Y, X1, Y1, Visited),
 	\+ h(X1, Y1).
 
-get_neighbour_(X, Y, L) :-
-	get_neighbour(X, Y, X1, Y1, []),
+get_neighbour_(X, Y, L, Visited) :-
+	get_neighbour(X, Y, X1, Y1, Visited),
 	L = [X1, Y1].
 
-get_pass_(X, Y, L) :-
-	pass(X, Y, X1, Y1, []),
+get_pass_(X, Y, L, Visited) :-
+	pass(X, Y, X1, Y1, Visited),
 	L = [X1, Y1].
 
-get_states(X, Y, States) :-
-	findall(L, (get_neighbours_(X, Y, L);get_pass_(X, Y, L)), States).
+get_states(X, Y, States, Visited) :-
+	findall(L, (get_neighbour_(X, Y, L, Visited);get_pass_(X, Y, L, Visited)), States).
 
 pick_random(X, Y, State) :-
-	get_states(X, Y, States),
+	get_states(X, Y, States, []),
     length(States, Length),
     random(0, Length, Index),
     nth0(Index, States, State).
@@ -166,6 +166,51 @@ in_list(L, X, Y) :-
 		[L1|_] = L,
 		L1 == [X, Y]
 	).
+
+abs(I, Res) :-
+	I < 0 -> Res is -I; Res is I.
+
+heur(X, Y, Res) :-
+	t(Xt, Yt),
+	abs((X-Xt), Xd),
+	abs((Y-Yt), Yd),
+	Res is 10*(Xd + Yd).
+
+get_min_heur_([[X, Y]| Tail], MinHeur, ResCoords) :-
+	heur(X, Y, ResHeur),
+	(ResHeur < MinHeur -> (
+		get_min_heur_(Tail, ResHeur, ResCoords1),
+		[X1, Y1] = ResCoords1,
+		heur(X1, Y1, R1),
+		(ResHeur < R1 -> ResCoords = [X, Y], !; ResCoords = ResCoords1)
+	);
+	get_min_heur_(Tail, MinHeur, ResCoords)).
+
+get_min_heur_([[X,Y]], _, ResCoords) :-
+	ResCoords = [X, Y].
+
+get_min_heur(Coords, ResCoords) :-
+	get_min_heur_(Coords, 400, ResCoords).
+
+filter(_, [], []).
+filter(El, [E|Es], Res) :-
+   (El \== E *-> Res = [E|Fs]; Res = Fs),
+   filter(El, Es, Fs).
+
+greedy_move(X, Y, Visited, Path) :-
+	t(X,Y) -> Path = [[X, Y]],!; (
+		get_states(X, Y, States, Visited),
+		greedy_move_(States, [X1, Y1]),
+		V1 = [[X, Y]|Visited],
+		greedy_move(X1, Y1, V1, P1),
+		Path = [[X, Y]|P1]
+	).
+
+greedy_move_(States, State) :-
+	get_min_heur(States, NextCoord),
+	filter(NextCoord, States, FilteredStates),
+	(State = NextCoord; greedy_move_(FilteredStates, State)).
+
 
 pass(X, Y, X1, Y1, Visited) :-
 	direction(Xd, Yd),
