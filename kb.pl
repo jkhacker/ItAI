@@ -1,161 +1,46 @@
-h(16, 18).
-h(14, 8).
-h(14, 9).
-h(14, 10).
-h(14, 11).
-h(14, 12).
-h(14, 13).
-h(14, 14).
-h(14, 15).
-h(13, 8).
-h(13, 13).
-h(13, 14).
-h(13, 15).
-h(12, 15).
-h(12, 16).
-h(11, 15).
-h(11, 16).
-h(11, 17).
-h(10, 14).
-h(10, 16).
-h(10, 17).
-h(9, 5).
-h(9, 9).
-%% h(9, 11).
-h(9, 15).
-h(9, 17).
-h(8, 14).
-h(8, 15).
-h(8, 16).
-h(8, 17).
-h(7, 14).
-h(7, 15).
-h(7, 16).
-h(7, 17).
-h(6, 15).
-h(6, 17).
-h(6, 18).
-h(5, 16).
-h(5, 17).
-h(3, 9).
-h(1, 13).
-h(0, 13).
-o(19, 7).
-o(18, 3).
+h(17, 2).
+h(1, 2).
+o(19, 5).
 o(18, 4).
-o(18, 10).
-o(18, 12).
-o(18, 14).
-o(18, 17).
-o(17, 1).
-o(17, 2).
 o(17, 3).
-o(17, 5).
-o(17, 8).
-o(17, 13).
-o(17, 15).
-o(16, 0).
-o(16, 1).
 o(16, 2).
 o(16, 4).
 o(16, 5).
-o(16, 10).
-o(16, 12).
-o(16, 15).
-o(16, 17).
-o(15, 8).
-o(15, 14).
-o(14, 1).
-o(14, 3).
-o(14, 5).
-o(14, 7).
-o(14, 18).
-o(13, 1).
+o(16, 6).
+o(15, 1).
+o(15, 2).
+o(15, 3).
+o(15, 6).
+o(14, 0).
+o(14, 2).
+o(14, 6).
 o(13, 2).
+o(13, 4).
+o(13, 5).
 o(13, 6).
-o(13, 9).
-o(13, 10).
-o(13, 11).
-o(13, 12).
-o(13, 16).
-o(13, 17).
-o(12, 1).
-o(12, 5).
-o(12, 8).
-o(12, 13).
-o(12, 14).
-o(12, 17).
-o(11, 7).
-o(11, 11).
-o(11, 14).
-o(11, 18).
-o(10, 2).
+o(12, 2).
+o(12, 4).
+o(11, 0).
+o(11, 1).
+o(11, 2).
+o(11, 4).
 o(10, 4).
-o(10, 7).
-o(10, 10).
-o(10, 12).
-o(10, 15).
+o(9, 1).
+o(9, 2).
 o(9, 3).
-o(9, 7).
-o(9, 14).
-o(9, 16).
-o(9, 18).
-o(8, 6).
-o(8, 8).
-o(8, 13).
-o(8, 18).
-o(8, 19).
+o(9, 4).
+o(8, 1).
 o(7, 1).
-o(7, 2).
-o(7, 4).
-o(7, 9).
-o(7, 10).
-o(7, 12).
-o(7, 13).
-o(6, 0).
-o(6, 3).
-o(6, 5).
-o(6, 7).
-o(6, 10).
-o(6, 12).
-o(6, 14).
-o(6, 16).
-o(5, 2).
-o(5, 6).
-o(5, 8).
-o(5, 10).
-o(5, 15).
+o(6, 1).
+o(5, 1).
 o(4, 1).
-o(4, 3).
-o(4, 10).
-o(4, 12).
-o(4, 13).
-o(4, 15).
-o(4, 18).
-o(3, 7).
-o(3, 10).
-o(3, 12).
-o(3, 13).
-o(3, 17).
-o(2, 0).
-o(2, 3).
-o(2, 5).
-o(2, 8).
-o(2, 10).
-o(2, 13).
-o(2, 16).
-o(1, 4).
-o(1, 7).
-o(1, 11).
-o(1, 15).
-o(1, 18).
-o(1, 19).
+o(3, 1).
+o(2, 1).
+o(2, 2).
+o(1, 3).
 o(0, 1).
-o(0, 3).
-o(0, 7).
-o(0, 10).
-o(0, 12).
-t(10, 11).
+o(0, 2).
+t(18, 1).
 dynamic(max/1).
 direction(0, 1).
 direction(0, -1).
@@ -210,6 +95,68 @@ get_neighbour(X, Y, X1, Y1, Visited) :-
 	neighbour(X, Y, X1, Y1, Visited),
 	\+ h(X1, Y1).
 
+get_neighbour_(X, Y, L) :-
+	get_neighbour(X, Y, X1, Y1, []),
+	L = [X1, Y1].
+
+get_pass_(X, Y, L) :-
+	pass(X, Y, X1, Y1, []),
+	L = [X1, Y1].
+
+get_states(X, Y, States) :-
+	findall(L, (get_neighbours_(X, Y, L);get_pass_(X, Y, L)), States).
+
+pick_random(X, Y, State) :-
+	get_states(X, Y, States),
+    length(States, Length),
+    random(0, Length, Index),
+    nth0(Index, States, State).
+
+random_move(X, Y, NumOfMoves, Path) :-
+	t(X,Y) -> Path = [[X, Y]],!;
+	(
+		NumOfMoves > 0,
+		pick_random(X, Y, State),
+		[X1,Y1] = State,
+		N1 is NumOfMoves - 1,
+		random_move(X1, Y1, N1, P),
+		Path = [[X, Y]|P]
+	).
+
+rm(Path) :-
+	random_move(0, 0, 100, Path).
+
+random_start_(Path, N, Len) :-
+	N > 0,
+	N1 is N - 1,
+	(rm(P) -> (
+			length(P, PLen),
+			(PLen < Len -> 
+				(
+					random_start_(P1, N1, PLen), 
+					length(P1, L1),
+					(PLen < L1 ->
+						Path = P;
+						(L1 > 0 -> Path = P1; Path = P)
+					)
+				);
+				(
+					random_start_(P1, N1, Len),
+					Path = P1
+				)
+			)
+		);
+		(
+			random_start_(P1, N1, Len),
+			Path = P1
+		)
+	).
+
+random_start_([], 0, _).
+
+random_start(Path) :-
+	random_start_(Path, 100, 400).
+
 in_list(L, X, Y) :-
 	(
 		[_|T] = L,
@@ -260,7 +207,6 @@ move(X, Y, Visited, Path) :-
 	).
 
 start(Path) :-
-	asserta(max(999)),
 	move(0, 0, [], Path),
 	max(N),
 	length(Path, N1),
@@ -284,9 +230,10 @@ find_next(X, Y, X1, Y1, [[X2,Y2]|T]) :-
 print_arrow(X, Y, Path) :-
 	find_next(X, Y, X1, Y1, Path),
 	coord(X1, Y1),
-	Y #> Y1 -> write('v');(
-		Y #< Y1 -> write('^');(
-			X #> X1 -> write('<'); write('>')
+	(X == X1) -
+	(Y #> Y1, X == X1)-> (write('v'), !);(
+		(Y #< Y1, X == X1) -> (write('^'), !);(
+			(X #> X1, Y == Y) -> write('<'); write('>')
 		)
 	).
 
